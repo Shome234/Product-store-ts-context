@@ -25,8 +25,20 @@ const addToCart=(id:number,name:string,price:number,image:string)=>{
     }
 };
 
-
-const reduceCartQuantity=()=>{};
+//reduce the quantity of a product
+const reduceCartQuantity=(id:number)=>{
+    const updateProduct=products.map(product=>{
+        if(product.id===id){
+            const updatedQuantity=product.quantity!-1;
+            if(updatedQuantity<1){
+                removeFromCart(id);
+            }
+            return {...product,quantity:updatedQuantity}
+        }
+        return product;
+    });
+    setProduct(updateProduct);
+};
 
 //remove product from cart
 const removeFromCart=(id:number)=>{
