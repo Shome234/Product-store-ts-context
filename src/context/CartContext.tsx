@@ -1,15 +1,17 @@
 import { ReactNode, createContext } from "react";
 import { useLocalStorage } from "../useLocalStorage";
-import { ProductItem } from "../Types/Types";
+import { CartContextProps, ProductItem } from "../Types/Types";
 
 interface CartProviderProps{
     children:ReactNode,
 }
-const CartContext=createContext<CartProviderProps|undefined>(undefined);
-const [products,setProduct]=useLocalStorage<ProductItem[]>("dessert-product",[]);
+const CartContext=createContext<CartContextProps|undefined>(undefined);
+
+export function CartProvider({children}:CartProviderProps){
+    const [products,setProduct]=useLocalStorage<ProductItem[]>("dessert-product",[]);
 
 //add to cart
-const addToCart=(id:number,name:string,price:number,image:string)=>{
+    const addToCart=(id:number,name:string,price:number,image:string)=>{
     const existingProduct=products.find(product=>product.id===id);
     if(existingProduct){
         const updateproduct=products.map(product=>{
@@ -23,10 +25,10 @@ const addToCart=(id:number,name:string,price:number,image:string)=>{
     else{
         setProduct(previousProduct=>[...previousProduct,{id,name,price,image,quantity:1}]);
     }
-};
+    };
 
-//reduce the quantity of a product
-const reduceCartQuantity=(id:number)=>{
+    //reduce the quantity of a product
+    const reducecartQuantity=(id:number)=>{
     const updateProduct=products.map(product=>{
         if(product.id===id){
             const updatedQuantity=product.quantity!-1;
@@ -38,19 +40,35 @@ const reduceCartQuantity=(id:number)=>{
         return product;
     });
     setProduct(updateProduct);
-};
+    };
 
-//remove product from cart
-const removeFromCart=(id:number)=>{
+    //remove product from cart
+    const removeFromCart=(id:number)=>{
     setProduct(previousProduct=>previousProduct.filter(product=>product.id!==id));
-};
+    };
 
-//check item is in the cart or not
-const isItemInCart=(id:number)=>{
+    //check item is in the cart or not
+    const isItemInCart=(id:number)=>{
     return products.some(product=>product.id===id);
-};
+    };
 
-//resetin the cart
-const resetcart=()=>{
+    //resetin the cart
+    const resetCart=()=>{
     setProduct([]);
-};
+    };
+
+    return(
+        <CartContext.Provider
+        value={{
+            products,
+            addToCart,
+            reducecartQuantity,
+            removeFromCart,
+            isItemInCart,
+            resetCart
+        }}>
+            {children}
+        </CartContext.Provider>
+    );
+}
+
