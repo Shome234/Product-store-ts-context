@@ -12,4 +12,8 @@ const addToCart=()=>{};
 const reduceCartQuantity=()=>{};
 const removeFromCart=()=>{};
 const isItemInCart=()=>{}
-const resetcart=()=>{};
+
+//resetin the cart
+const resetcart=()=>{
+    setProduct([]);
+};
