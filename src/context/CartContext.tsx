@@ -8,7 +8,24 @@ interface CartProviderProps{
 const CartContext=createContext<CartProviderProps|undefined>(undefined);
 const [products,setProduct]=useLocalStorage<ProductItem[]>("dessert-product",[]);
 
-const addToCart=()=>{};
+//add to cart
+const addToCart=(id:number,name:string,price:number,image:string)=>{
+    const existingProduct=products.find(product=>product.id===id);
+    if(existingProduct){
+        const updateproduct=products.map(product=>{
+            if(product.id===id){
+                return {...product,quantity:product.quantity!+1};
+            }
+            return product;
+        });
+        setProduct(updateproduct);
+    }
+    else{
+        setProduct(previousProduct=>[...previousProduct,{id,name,price,image,quantity:1}]);
+    }
+};
+
+
 const reduceCartQuantity=()=>{};
 
 //remove product from cart
