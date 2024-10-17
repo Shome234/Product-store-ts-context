@@ -10,7 +10,11 @@ const [products,setProduct]=useLocalStorage<ProductItem[]>("dessert-product",[])
 
 const addToCart=()=>{};
 const reduceCartQuantity=()=>{};
-const removeFromCart=()=>{};
+
+//remove product from cart
+const removeFromCart=(id:number)=>{
+    setProduct(previousProduct=>previousProduct.filter(product=>product.id!==id));
+};
 
 //check item is in the cart or not
 const isItemInCart=(id:number)=>{
